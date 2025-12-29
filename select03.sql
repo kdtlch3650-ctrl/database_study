@@ -120,3 +120,43 @@ select
     ename
 from emp;
 --where rownum <5;
+
+/*******************************/
+--날짜
+
+select
+    SYSDATE,       --현재 날짜
+    SYSTIMESTAMP,   --현재 날짜 시간
+    MONTHS_BETWEEN('2024-01-05', '2024-03-05'),
+    MONTHS_BETWEEN('2024-11-05', '2024-06-20')    
+    --앞날짜 - 뒷날짜 -> 월단위 환산
+from dual;
+
+select
+    ADD_MONTHS(SYSDATE,3), --월 단위 변경
+    ADD_MONTHS(SYSDATE,6),
+    ADD_MONTHS(SYSDATE,-7),
+    LAST_DAY(SYSDATE),   -- 30 31 28 29 마지막 날짜
+    NEXT_DAY(SYSDATE,'수'), --돌아오는 요일
+    NEXT_DAY(SYSDATE,'토')
+from dual;
+
+select
+    SYSDATE,
+    ROUND(SYSDATE), --반올림
+    TRUNC(SYSDATE), -- 버림
+    TRUNC(SYSDATE,'YY'),
+    TRUNC(SYSDATE,'MM'),
+    TRUNC(SYSDATE,'DD'),
+    ADD_MONTHS(SYSDATE,1),
+    SYSDATE +3,
+    SYSDATE +7,
+    --다음달 첫날
+    LAST_DAY(SYSDATE)+1, --요번달 마지막 +1
+    TRUNC(ADD_MONTHS(SYSDATE, 1), 'MM') --다음달 보내고 날짜버림
+    --전월의 마지막날
+    LAST_DAY(ADD_MONTHS(SYSDATE, -1)),
+    TRUNC(SYSDATE, 'MM')-1
+from dual;
+    
+    
