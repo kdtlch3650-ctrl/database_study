@@ -89,6 +89,128 @@ select distinct deptno from emp;
 
 select distinct job,deptno from emp; -- job,deptno가 둘다 중복 되는값
 
+/*****************************************/
+조건 Where 절
+필터링, 원하는 조건에 따라 조회
 
+select ...
+from ...
+where ... ;
 
+select *
+from emp
+where sal > 2500; --sal 값이 2500 초과하는 직원의 모든 정보 조회
 
+select ename
+from emp
+where sal > 2500; 
+
+--직업이 세일즈맨인 사람만 조회
+
+select *
+from emp
+where job = 'SALESMAN'; --대소문자 구분 함, ''붙여야 글자인식 숫자는 상관 x
+
+select *
+from emp
+where deptno = 10;
+
+select *
+from emp
+where deptno != 10;
+--또는 where depton <> 10;
+
+select *
+from student
+--where weight >= 55;
+--where weight >= 55 and weight <= 70; --55kg <= <= 70kg
+where weight between 55 and 70;
+
+select *
+from student --1~3 학년 조회
+--where grade >= 1 and grade <= 3;
+--where grade between 1 and 3;
+--where grade = 1 or grade = 2 or grade = 3;
+--where grade <> 4;
+--where grade != 4;
+where grade in(1,2,3);
+
+select *
+from student
+--where grade in(2,4);
+--where grade = 2 or grade = 4;
+--where grade != 1 and grade <> 3;
+where grade NOT in(1,3);
+
+LIKE 패턴 검색(문자)
+    % : 0~n개 아무갯수
+    _ : 그 위치에 한개(위치)
+
+select ename
+from emp
+--where ename LIKE '%M%'; --'123M123' 'M12314212' '12412412M' 다 가능
+--where ename LIKE 'M%'; -- 'M1231245'만
+--where ename LIKE '%M'; -- '1243141M'만
+--WHERE ename LIKE '_M%'; -- '1M21412451만
+where ename LIKE '__M%'; --'12M213124'만
+
+select *
+from emp
+--WHERE comm is null; --null을 비교 할때는 = != <> 가 아니라 is null 사용
+WHERE comm is not null;
+
+날짜 비교
+1201
+1221
+날짜 미래일수록 큰 값
+    과거일수록 작은 값
+
+select *
+from emp -- 테이블 정보 팝업설명 shift + f4
+--where hiredate = '81/05/01';
+--where hiredate = '1981-05-01';
+--where hirefate > '80/08/20';
+where hiredate <= '1981-04-05';
+
+/**********************************/
+
+정렬 order by
+단순 조회 -> 정렬을 명시하지 않으면 순서 보장 X
+
+ORDER BY 정렬기준컬럼명 [ASC|DESC] [오름차순|내림차순] -- 기본 오름차순
+
+select ...
+FROM ...
+WHERE ...
+ORDER BY ...;
+
+select ...
+FROM ...
+ORDER BY ...;
+
+select *
+from student
+--order by name ASC;
+--order by name; -- 기본 오름차순
+order by name DESC;
+
+--학생들 학년기중으로 내림차순
+select *
+from student
+order by grade desc;
+
+select name, grade
+from student
+order by grade desc;
+
+--123학년 학생들 키순 내림차순
+select *
+from student
+where grade in(1,2,3)
+--order by height desc; -- 같은 키 처리 어떻게 할래?
+--order by grade, height desc; -- 학년처리 하고 하겠다.
+order by height, grade desc; -- 키처리 하고 학년으로 하겠다.
+
+select *
+from student
+order by birthday desc; --생일 날짜가 클 수록 젊은것

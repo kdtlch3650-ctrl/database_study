@@ -9,4 +9,4 @@ from emp;
 3.
 select
     ENAME||'''s sal is $'||sal "Name and Sal"
-from emp
+from emp;
