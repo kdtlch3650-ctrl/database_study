@@ -22,13 +22,16 @@ where deptno1 = 101;
 --3,
 --Student 테이블에서 아래 그림과 같이 1 전공이 102 번인 학생들의 이름과 전화번호, 전화번호에서 국번 부분만 ‘*’ 처리하여 출력하세요.
 --단 모든 국번은 3자리로 간주합니다.
+--응용) 가운데 자리 숫자의 자리수에 맞춰 *하기
 
 select
     name,
     tel,
-    SUBSTR(tel,1,INSTR(tel, ')')) || '***' || SUBSTR(tel,INSTR(tel, '-'),5) REPLACE,
-    REPLACE(tel,SUBSTR(tel,INSTR(tel,')')+1,3),'***') REPLACE
-from student
+    --SUBSTR(tel,1,INSTR(tel, ')')) || '***' || SUBSTR(tel,INSTR(tel, '-'),5) REPLACE,
+    --REPLACE(tel,SUBSTR(tel,INSTR(tel,')')+1,3),'***') REPLACE,
+    RPAD(SUBSTR(tel,1,INSTR(tel, ')')), length(SUBSTR(tel,1,INSTR(tel, '-')))-1, '*') || SUBSTR(tel,INSTR(tel,'-')) 내가만듬,
+    SUBSTR(tel,1,INSTR(tel,')')) || LPAD('*',(INSTR(tel,'-')-INSTR(tel,')')-1), '*') || SUBSTR(tel,-5,5)
+from student;
 where deptno1 = 102;
 
 --4.
