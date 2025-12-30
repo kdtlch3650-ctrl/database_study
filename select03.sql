@@ -81,7 +81,7 @@ select
     LTRIM('^^abcd^^','^')
 from dual;
 
---REPLACE(내용,교체될내용,교체할내용)
+--REPLACE(내용,교체될내용,교체할내용) - 교체할 내용만큼만 바뀜 교체될내용 '123' 교체할내용 '9'이면 923이 됨
 select
     REPLACE('abcde', 'c', '/')
 from dual;
