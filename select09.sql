@@ -343,7 +343,43 @@ where team = 3;
 /***********************************/
 집계 group by -> 서브쿼리 , join
 
+부서번호, 부서별, 최대급여, 부서명
+
 select deptno, MAX(sal)
 from emp
 group by deptno;
+
+--group by집계 -> join 
+select * 
+from 
+(select deptno, MAX(sal) max_sal
+from emp
+group by deptno) e, dept d
+where e.deptno = d.deptno;
+
+--group by 집계 -> select subquery
+select
+    e.deptno
+    ,e.max_sal
+    ,(select d.dname
+        from dept d
+        where d.deptno = e.deptno) dname
+from (
+select deptno, MAX(sal) max_sal
+from emp 
+group by deptno) e;
+
+
+--join -> group by 집계
+
+select deptno, dname, MAX(sal)
+from (
+select 
+    e.deptno
+    ,e.sal
+    ,d.dname
+from emp e, dept d
+where e.deptno = d.deptno)
+group by deptno, dname;
+
 
