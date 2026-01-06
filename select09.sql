@@ -277,3 +277,73 @@ where A.emp_type = B.emp_type
 --타입으로 조인
 AND A.pay < B.avg_pay;
 --평균이 더 높은것만 남겨둠
+
+/****************************/
+ROWNUM 활용
+
+select 
+    ROWNUM --번호순
+    ,CEIL(ROWNUM/3) --3개씩 묶기
+    ,studno
+    ,name
+    ,grade
+    ,height
+from student
+order by height desc;
+--ROWNUM 정렬 하면 순서 바뀜
+--서브쿼리로 해결
+select 
+    ROWNUM,rn, studno, name
+from(
+select
+    ROWNUM rn--번호순
+    ,CEIL(ROWNUM/3) --3개씩 묶기
+    ,studno
+    ,name
+    ,grade
+    ,height
+from student
+order by height desc
+);
+
+select rownum studno, name height
+from student
+where rownum <= 5;
+
+select rownum, studno, name, height
+from student
+where rownum <= 5 --기존 rownum으로 인식해서 다른 결과가 조회
+order by height desc;
+
+--키순으로 정렬된 테이블 상태를 기준으로 다시 rownum으로 인식해서 키큰사람 5명 조회
+select *
+from(
+    select 
+    rownum, studno, name, height
+from student
+order by height desc
+)
+where rownum <= 5;
+
+
+-- 팀 3팀 조회
+
+select *
+from (
+select
+    rownum rn
+    ,ceil(rownum/3) team
+    ,studno
+    ,name
+    ,grade
+    ,height
+from student)
+where team = 3;
+
+/***********************************/
+집계 group by -> 서브쿼리 , join
+
+select deptno, MAX(sal)
+from emp
+group by deptno;
+
