@@ -144,6 +144,9 @@ from emp2 a,(
 where a.emp_type = b.emp_type
 AND a.pay < b.avg_pay;
 
+/******************************************************/
+ROWNUM 활용방법
+
 select ROWNUM, studno, name, height --한번더 ROWNUM을 써주면 키순으로 정리가 된 상태로 번호가 주어짐
 from(
     select
@@ -157,4 +160,91 @@ from(
     order by height desc
 );
 
-----------------------------덜 끝났음 서브쿼리 설명 2 7:20 https://youtu.be/uA2NFebDYAI?si=7UyPAZZ0K1FKlJ6p&t=451
+select ROWNUM, studno, name, height
+from student 
+where ROWNUM <= 5; --위에서 5개 뽑아서만 보여줌
+
+selelct ROWNUM, studno, name, height
+from student
+where ROWNUM <= 5 --ROWNUM 으로 5개만 남긴후 키순 정리 해버림 의미 없어짐
+order by height desc;
+
+--키순으로 정리된 테이블을 넘버를 붙여 키순 번호 만든 후 5명 조회
+--기본적으로 정렬을 보장하지 않음.
+select studno, name, height, ROWNUM
+from (
+    select studno, name, height
+    from student 
+    order by height desc
+)
+where ROWNUM <= 5;
+
+--3팀 조회 안되는 케이스
+select
+        ROWNUM "ROWNUM" --행번호가 정렬이 없는 상태로 주어지기에 정렬하면 엉망임
+        ,CEIL(ROWNUM/3)
+        ,studno
+        ,name
+        ,grade
+        ,height
+    from student
+    where CEIL(ROWNUM / 3) = 3; --3팀만 뽑고 싶은데 안됨.
+    --From과 Where를 확인하고 select를 만들기에 ROWNUM가 아직 만들어지지 않음. / 결과 없음.
+  
+select * 
+from ( 
+    select
+        ROWNUM
+        ,CEIL(ROWNUM/3) team
+        ,studno
+        ,name
+        ,grade
+        ,height
+    from student
+) -- 서브쿼리로 이미 계산이 끝난 값을 from으로 가져오기에 Rownum이 계산이 되어있음
+where team =3;
+
+/************************************************/
+집계 group by -> 서브쿼리,Join
+
+--부서별 최대급여 group by 버전
+--부서번호, 부서별 최대급여, 부서명
+--다보려면 그루업 때문에 상당히 귀찮아짐
+select deptno, MAX(sal)
+from emp
+group by deptno;
+
+--그때 서브쿼리로 처리
+--그룹 집계 -> 조인
+select e.deptno, e.max_sal, d.dname
+from(
+select deptno, MAX(sal) max_sal -- 함수 별칭 꼭 해주기 (밖에서 쓰기위해)
+from emp
+group by deptno
+) e, dept d
+where e.deptno = d.deptno;
+
+
+--그룹집계 -> 셀렉 쿼리
+select 
+    e.deptno
+    , e.max_sal
+    , (
+        select d.dname
+        from dept d
+        where d.deptno = e.deptno
+        ) dname
+from (
+    select deptno, MAX(sal) max_sal
+    from emp
+    group by deptno
+    ) e;
+
+-- join -> group by 집계
+select deptno, dname, MAX(sal)
+from (
+    select e.deptno, e.sal, d.dname
+    from emp e, dept d
+    where e.deptno = d.deptno
+    )
+group by deptno, dname;
