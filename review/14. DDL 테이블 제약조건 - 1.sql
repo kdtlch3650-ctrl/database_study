@@ -83,3 +83,72 @@ COMMIT;
 DDL 제약조건 KEY
 PK(primary KEY) 기본키 (테이블에 한개만 설정 가능)
 FK(Foreign KEY) 외래키 (다른 테이블 데이터를 식별할 수 있는 키 / deptno 같은거로 /조인용)
+
+CREATE TABLE tt03
+(
+    no NUMBER(3) PRIMARY KEY --기본키(PK) 설정 not null UNIQUE 자동설정 /테이블당 하나만 가능
+    ,name VARCHAR2(16) 
+    ,birth DATE
+);
+
+select * from tt03;
+
+INSERT ALL
+INTO tt03 VALUES (1,'n1',SYSDATE)
+INTO tt03 VALUES (1,'n1',SYSDATE) --기본키 중복 X
+INTO tt03 VALUES (null,'n1',SYSDATE)--기본키 null X
+select * from daul;
+
+CREATE TABLE tt03
+(
+    no NUMBER(3) 
+    ,id VARCHAR2(32)
+    ,name VARCHAR2(16) 
+    ,birth DATE
+    ,CONSTRAINT tt04_pk PRIMARY KEY (no, id) --두개의 컬럼을 조합해서 PK로 설정
+);
+
+/**********************************************/
+student ->profno->professor
+
+외래키 FK : 다른 테이블에 있는 키값 참조하는 컬럼
+- 참조하는 테이블(부모테이블)에 존재하는 값만 사용 가능 (+null가능)
+- 외래키 대상으로 설정된 부모테이블에서 자신을 참조하는 자식테이블의 데이터가 존재하면, 삭제불가
+
+외래키 삭제 조건
+ON DELETE CASCADE; --부모데이터 삭제시, 그 값을 참조하는 자식데이터도 같이 삭제
+ON DELETE SET NULL; --부모데이터 삭제시, 그 값을 참조하는 자식데이터를 NULL 값으로 변경
+
+CREATE TABLE T_CLUB
+(
+    id NUMBER(3) PRIMARY KEY
+    ,name VARCHAR2(32)
+);
+
+CREATE TABLE T_MEMBER
+(
+    id NUMBER(3) PRIMARY KEY
+    ,name VARCHAR2(32)
+    ,club_id REFERENCES T_CLUB(id)--외래키(FK) 설정
+);
+
+INSERT INTO T_CLUB VALUES(1,'독서');
+INSERT INTO T_CLUB VALUES(2,'게임');
+INSERT INTO T_CLUB VALUES(3,'등산');
+INSERT INTO T_CLUB VALUES(4,'낚시');
+
+
+INSERT INTO T_MEMBER VALUES(1,'이름1',2);
+INSERT INTO T_MEMBER VALUES(2,'이름2',1);
+INSERT INTO T_MEMBER VALUES(3,'이름3',1);
+
+select *
+--delete
+from T_MEMBER
+where name = '이름3';
+
+select * from T_CLUB;
+
+select *
+from T_MEMBER m, T_CLUB c
+where m.club_id = c.id;
